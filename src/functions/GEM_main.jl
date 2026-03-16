@@ -74,7 +74,7 @@ function run_replicate(init_state::InitState,
 
         """ Func Event Terms """
         terms = collect(Event_Terms(param_next, const_vect, N))
-       # @show terms
+        @show terms
 
         """ Func Pick Event """
         picked_event = PickEvent(terms, no_state)
@@ -118,7 +118,7 @@ function run_replicate(init_state::InitState,
             time_step = stand_time[time_step_index]
         end
         #@show c_sum
-        #@show N
+        @show N
         # Advance time
         time_advance = exp(-1/c_sum[end])/(c_sum[end])
         if !isnan(time_advance) && time_advance > 0 

@@ -1,11 +1,5 @@
-name = "JGEM"
-uuid = "cf887274-0a0c-4fc4-ba31-7a919ffa5d3e"
-authors = ["dipanjana-dalui <31413248+dipanjana-dalui@users.noreply.github.com>"]
-version = "0.1.0"
-
 [deps]
 AlgebraOfGraphics = "cbdf2221-f076-402e-a563-3d30da359d67"
-BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
@@ -19,20 +13,3 @@ Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 Tidier = "f0413319-3358-4bb0-8e7c-0c83523a93bd"
 UnPack = "3a884ed6-31ef-47d7-9d2a-63182c4928ed"
-
-[compat]
-AlgebraOfGraphics = "0.11.6"
-BenchmarkTools = "1.6.0"
-CSV = "0.10.15"
-CairoMakie = "0.15.6"
-DataFrames = "1.7.0"
-DifferentialEquations = "7.16.1"
-Distributions = "0.25.120"
-Makie = "0.24.6"
-Plots = "1.40.19"
-Random = "1.11.0"
-StaticArrays = "1.9.14"
-Statistics = "1.11.1"
-StatsBase = "0.34.6"
-Tidier = "0.7.7"
-UnPack = "1.0.2"
