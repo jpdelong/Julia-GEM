@@ -53,6 +53,7 @@ par_names = ["b_max", "d_min", "b_s", "d_s"] # parameter names
 no_state = length(N_init) # number of states (do not edit)
 no_param = length(param_vect) # number of params (do not edit)
 
+constant_vect = []
 # ===================================================================
 # mapping arrays 
 # nrow = state; ncol = param
@@ -64,9 +65,9 @@ no_columns = no_param + 1 + size(state_geno_match, 2) # do not edit
 
 # ===================================================================
 # simulation design choices
-GEM_ver = ["ver1", "ver2", "ver3", "ver4"] # number of GEM versions
+GEM_ver = ["ver1"]#, "ver2", "ver3", "ver4"] # number of GEM versions
 # nrow: state; ncol  = GEM ver
-h2 = [ 0.0 0.2 0.2 0.2 ] # narrow sense heritability
+h2 = [ 0.0 ]#0.2 0.2 0.2 ] # narrow sense heritability
 # cv = array{state ID, length(param), GEM ver}
 """
 Note: The first stack is for GEM ver 1; typically reserved for "no-evolution". All elements are set to 0.0
@@ -76,16 +77,16 @@ You can mirror the dimensions of state_parameter_match matrix defined above.
 0 -> n/a for this state
 """
 cv = cat([ 0.0 0.0 0.0 0.0], #ver 1
-         [ 0.2 0.0 0.0 0.0], #ver 2
-         [ 0.0 0.2 0.0 0.0], #ver 3
-         [ 0.2 0.2 0.0 0.0], #ver 4
+        # [ 0.2 0.0 0.0 0.0], #ver 2
+        # [ 0.0 0.2 0.0 0.0], #ver 3
+        # [ 0.2 0.2 0.0 0.0], #ver 4
            dims=3) 
 
 # =================================================================== 
 
 # replicate and time
 num_rep = 2 # number of replicates
-t_max = 7.0 # maximum time 
+t_max = 20.0 # maximum time 
 min_time_step_to_store = 0.1 # time points when data is stored
 stand_time = range(0, t_max, step = min_time_step_to_store) # standadized number of time points across all runs (do not edit)
 stand_time = collect(stand_time) # do not edit
@@ -143,5 +144,7 @@ sim_output = GEMOutput(
     x_var_stand_out_all # Array{Float64, 5}
     )
     
-
-    
+""" 7. Instantiate Constants """
+gem_const_vect = GEMConstant(
+   constant_vect
+   ) 

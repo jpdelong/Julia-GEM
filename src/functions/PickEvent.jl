@@ -11,7 +11,7 @@ function PickEvent(terms::Vector{Float64}, no_state::Int)
 	state_ids = temp[:, 1]
 	rates = temp[:, 2:end]
 
-	nz_rate_pos = findall(rates .!= 0) 
+	nz_rate_pos = findall(rates .!= 0 .&& .!isnan.(rates)) #findall returns a vector of tuples (row, col) where the condition is true
 	nz_rate_vals = rates[nz_rate_pos] 
 	c_sum = cumsum(nz_rate_vals)  
 	pie_slices = c_sum ./ c_sum[end] #generated weighted slices b/w 0-1
@@ -21,9 +21,9 @@ function PickEvent(terms::Vector{Float64}, no_state::Int)
 	event_index = findfirst(==(1), less_than)
 
 	picked_event = nz_rate_pos[event_index]
-	#col 1 = birth, col 2 = death
-	row = picked_event[1]  
-	col = picked_event[2] 
+	row = picked_event[1]  # state ID
+	col = picked_event[2]  # event type (1 = birth, 2 = death) 
+	
 	return (c_sum = c_sum, event=col, state=row)
 	
 

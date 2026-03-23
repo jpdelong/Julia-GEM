@@ -44,7 +44,7 @@ function Death(d_min::Float64, d_s::Float64, R::Vector{Int})
 end
 
 
-function Event_Terms(param_next::Matrix{Float64}, R::Vector{Int})
+function Event_Terms(param_next::Matrix{Float64}, const_vect::Any,R::Vector{Int})
     b_max = param_next[1,1] # max birth
     d_min = param_next[1,2] # min death
     b_s = param_next[1,3] # density dependence of birth
@@ -117,4 +117,10 @@ struct GEMOutput
     x_var_stand_out_all::Array{Float64, 5} # trait variance data storage
 end
 
+"""
+7. CONSTANTS
+"""
+struct GEMConstant{T} 
+    const_vect::Vector{T}
+end
 

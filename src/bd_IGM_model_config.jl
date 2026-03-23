@@ -17,7 +17,7 @@ Random.seed!(42)
 #                    INITIAL STATE AND PARAMETERS
 # ======================================================================
 
-N_init = [0, 50, 5] # initial abundances (the array takes integer values)
+N_init = [20, 50, 5] # initial abundances (the array takes integer values)
 
 # parameters distribution mu and sigma
 
@@ -29,11 +29,11 @@ d_min_mu = 1.0 # minimum death
 d_min_sigma = 0.0
 
 # density dependence of birth
-b_s_mu = 0.04
+b_s_mu = 0.002
 b_s_sigma = 0.0
 
 # density dependence of death
-d_s_mu = 0.04
+d_s_mu = 0.002
 d_s_sigma = 0.0
 
 K = ((b_max_mu - d_min_mu)/(b_s_mu + d_s_mu))
@@ -41,7 +41,7 @@ K = ((b_max_mu - d_min_mu)/(b_s_mu + d_s_mu))
 # b_N = max((b_max_mu - b_s_mu*N_init[1])*N_init[1],0)
 
 # parameters for C
-a_cn_mu = 0.2
+a_cn_mu = 0.02
 a_cn_sigma = 0.1
 
 h_cn_mu = 0.001
@@ -154,7 +154,7 @@ cv = cat([0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0;
 # =================================================================== 
 
 # replicate and time
-num_rep = 2 # number of replicates
+num_rep = 10 # number of replicates
 t_max = 20.0 # maximum time 
 min_time_step_to_store = 0.1 # time points when data is stored
 stand_time = range(0, t_max, step = min_time_step_to_store) # standadized number of time points across all runs (do not edit)

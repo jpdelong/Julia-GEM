@@ -99,7 +99,18 @@ end
 #====================================================# 
 function Pop_Plot(;pop_data::DataFrame, stateID::Int64, add_mean::Bool)
     pop_time = pop_data[pop_data.state_ID .== stateID, :]
+   
     rep_col_name = names(pop_time)[4:size(pop_time)[2]]
+
+    for col in rep_col_name
+        col_data = pop_time[:, col]
+        first_zero = findfirst(==(0.0), col_data)
+        if !isnothing(first_zero) && first_zero < length(col_data)
+            pop_time[first_zero+1:end, col] .= NaN
+        end
+    end
+
+
     pop_stack = stack(pop_time, 
                     rep_col_name)
 

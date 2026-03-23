@@ -1,7 +1,6 @@
 """
     1. Function to run one replication 
 """
-
 function run_replicate(init_state::InitState,
                         mod_par_vect::ModelParVector,
                         gem_constants::GEMConstant,
@@ -69,12 +68,15 @@ function run_replicate(init_state::InitState,
         param_next = FindWhoNext.param_next # FindWhoNext[1]; Using named tuple for cleaner access
         genotype_next = FindWhoNext.genotype_next # FindWhoNext[2]
         whosnext = FindWhoNext.whosnext # FindWhoNext[3]
-       # @show param_next
-       # @show whosnext
+        #@show param_next
+        #@show whosnext
+
+        #@show N
+        #@show sum(N)
 
         """ Func Event Terms """
         terms = collect(Event_Terms(param_next, const_vect, N))
-        @show terms
+        #@show terms
 
         """ Func Pick Event """
         picked_event = PickEvent(terms, no_state)
@@ -118,14 +120,16 @@ function run_replicate(init_state::InitState,
             time_step = stand_time[time_step_index]
         end
         #@show c_sum
-        @show N
+        #@show N
         # Advance time
         time_advance = exp(-1/c_sum[end])/(c_sum[end])
         if !isnan(time_advance) && time_advance > 0 
             t = t + time_advance
         else
-            println("Time advance error. Check cumulative 
-            sum. Stopped at time:\nT $t")
+            println("Time advance error. 
+            Check cumulative sum. 
+            Likely only one event possible, tau effectively 0. 
+            Simularion stopped at time:\nT $t")
             #@show N
             break
         end 
@@ -150,7 +154,7 @@ function run_replicate(init_state::InitState,
     end 
 
         # Return the results for this replicate
-    return (pop_time_series=pop_slice, trait_mom1 = x_slice, trait_mom2 = x_var_slice)
+    return (pop_time_series=pop_slice, trait_mom1 = x_slice, trait_mom2 = x_var_slice, last_index_t = time_step_index-1)
 end
 
 # ==================================================================
@@ -184,21 +188,20 @@ function GEM_sim(init_state::InitState,
         x_stand = fill(NaN, no_columns - 1, num_time_steps, no_state, num_rep)
         x_var_stand = fill(NaN, no_columns - 1, num_time_steps, no_state, num_rep)
         
-        rep_good = fill(false, num_rep)
         Threads.@threads for i = 1:num_rep # loop through the replicates
-            @show Threads.threadid()  
-            try          
+            #@show j
+            #@show i
+            @show Threads.threadid()            
             results = run_replicate(init_state, mod_par_vect, gem_constants, dc, sim_map, 
                 sim_par,j, verbose)
-            pop_slice = results.pop_time_series
-            x_slice = results.trait_mom1
-            x_var_slice = results.trait_mom2
-            pop_stand[:, :, i] .= pop_slice
-            x_stand[:, :, :, i] .= x_slice
-            x_var_stand[:, :, :, i] .= x_var_slice
-            catch e
-                println("Error in replicate $i: $e on thread $(Threads.threadid())")
-            end
+            #pop_slice = results.pop_time_series
+            #x_slice = results.trait_mom1
+            #x_var_slice = results.trait_mom2
+
+            last_t = results.last_index_t
+            pop_stand[:, 1:last_t, i] .= results.pop_time_series[:, 1:last_t]
+            x_stand[:, 1:last_t, :, i] .= results.trait_mom1[:, 1:last_t, :]
+            x_var_stand[:, 1:last_t, :, i] .= results.trait_mom2[:, 1:last_t, :]
         end
         
         pop_stand_out_all[:, :, :, j] .= pop_stand
@@ -207,12 +210,10 @@ function GEM_sim(init_state::InitState,
     end
     
     # turn the multidimensional output arrays into long dataframes
-    pop_out = make_pop_df_long(sim_op, sim_par, dc) # population time series dataframe
-    trait_out = make_trait_df_long(sim_op, sim_par, dc, sim_map) # trait mean and var time seroes dataframes 
+    pop_out = make_pop_df_long(sim_output, sim_params, design_choices) # population time series dataframe
+    trait_out = make_trait_df_long(sim_output, sim_params, design_choices, mappings) # trait mean and var time seroes dataframes 
     # trait_out has two dataframes that can be accessed with named tuples: trait_out.mean and trait_out.var 
 
     return (pop_df = pop_out, trait_df = trait_out)
 end
-
-#===================================================================#
 
